@@ -1,5 +1,6 @@
 package dev.Ningappa.EcommProductService.Client;
 
+import dev.Ningappa.EcommProductService.dto.FakeStoreCartResponseDTO;
 import dev.Ningappa.EcommProductService.dto.FakeStoreProductResponseDTO;
 import dev.Ningappa.EcommProductService.dto.FakeStroreProductRatingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class FakeStoreClient
     @Value(("${fakestore.api.product.path}"))
     private String fakeStoreAPIProductPath;
 
+    @Value(("${fakestore.api.cart.for.user.path}"))
+    private String fakeStoreAPICartPath;
+
+
+
     public List<FakeStoreProductResponseDTO> getAllProducts()
     {
         String fakeStoreGetAllProductURL=fakeStoreAPIBaseURL.concat(fakeStoreAPIProductPath);
@@ -47,6 +53,20 @@ public class FakeStoreClient
 
 
     }
+
+    public List<FakeStoreCartResponseDTO> getCardByUserId(int userId)
+    {
+
+        String fakeStoreGetCartForUserURL=fakeStoreAPIBaseURL.concat(fakeStoreAPICartPath).concat(String.valueOf(userId));
+        RestTemplate restTemplate=restTemplateBuilder.build();
+
+        ResponseEntity<FakeStoreCartResponseDTO[]> cartResponse=
+                restTemplate.getForEntity(fakeStoreGetCartForUserURL,FakeStoreCartResponseDTO[].class);
+        return  List.of(cartResponse.getBody());
+
+
+    }
+
 
 
 

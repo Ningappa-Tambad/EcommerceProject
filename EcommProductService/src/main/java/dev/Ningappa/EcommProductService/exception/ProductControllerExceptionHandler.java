@@ -1,5 +1,6 @@
 package dev.Ningappa.EcommProductService.exception;
 
+import dev.Ningappa.EcommProductService.controller.Productcontroller;
 import dev.Ningappa.EcommProductService.dto.ExceptionResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,24 +9,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
 
-@ControllerAdvice
-public class ProductServicerExceptionHandler {
+@ControllerAdvice(basePackageClasses = Productcontroller.class)
+public class ProductControllerExceptionHandler {
 
 
-    @ExceptionHandler(NoProductPresentException.class)
-    public ResponseEntity handleNoProductPresentException(NoProductPresentException pe)
-    {
-        ExceptionResponseDTO exceptionResponseDTO=new ExceptionResponseDTO(
-                pe.getMessage(),
-                404
 
-        );
-
-        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity handleProductNotFoundException(ProductNotFoundException pe)
+    @ExceptionHandler({ProductNotFoundException.class,NoProductPresentException.class})
+    public ResponseEntity handleNoProductException(ProductNotFoundException pe)
     {
         ExceptionResponseDTO exceptionResponseDTO=new ExceptionResponseDTO(
                 pe.getMessage(),
@@ -35,4 +25,20 @@ public class ProductServicerExceptionHandler {
 
         return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity handleInvalidInputException(InvalidInputException pe)
+    {
+        ExceptionResponseDTO exceptionResponseDTO=new ExceptionResponseDTO(
+                pe.getMessage(),
+                400
+
+        );
+
+        return new ResponseEntity<>(exceptionResponseDTO, HttpStatus.BAD_REQUEST);
+    }
+
+
+
+
 }

@@ -4,6 +4,8 @@ package dev.Ningappa.EcommProductService.controller;
 import dev.Ningappa.EcommProductService.Entity.Product;
 import dev.Ningappa.EcommProductService.Service.ProductService;
 import dev.Ningappa.EcommProductService.dto.FakeStoreProductResponseDTO;
+import dev.Ningappa.EcommProductService.exception.InvalidInputException;
+import dev.Ningappa.EcommProductService.exception.NoProductPresentException;
 import dev.Ningappa.EcommProductService.exception.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +24,20 @@ public class Productcontroller {
     private ProductService productService; //Field injection
 
     @GetMapping("/product")
-    public ResponseEntity  getAllProducts()
-    {
+    public ResponseEntity  getAllProducts() throws NoProductPresentException {
    List<FakeStoreProductResponseDTO> products=productService.getAllProducts();
    return ResponseEntity.ok(products);
     }
 
    @GetMapping("/product/{id}")
     public ResponseEntity getProductById(@PathVariable("id") int id) throws ProductNotFoundException {
-       FakeStoreProductResponseDTO product=productService.getProduct(id);
+
+        if(id<1)
+        {
+            throw new InvalidInputException("Input is not correct");
+        }
+
+        FakeStoreProductResponseDTO product=productService.getProduct(id);
        return ResponseEntity.ok(product);
    }
 
